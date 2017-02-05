@@ -1,0 +1,32 @@
+proper permissions: https://support.rackspace.com/how-to/mysql-connect-to-your-database-remotely/
+
+authentication: 
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'ql#1Arbiter4578my'
+app.config['MYSQL_DATABASE_DB'] = 'test_schema'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+
+finally: change the name of the table to tbl_user
+
+
+
+
+BEGIN
+    if ( select exists (select 1 from test_table where user_username = p_username) ) THEN
+     
+        select 'Username Exists !!';
+     
+    ELSE
+     
+        insert into test_table
+        (
+            user_username,
+            user_password
+        )
+        values
+        (
+            p_username,
+            p_password
+        );
+     
+    END IF;
