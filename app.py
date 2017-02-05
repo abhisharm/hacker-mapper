@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, json
 from flask.ext.mysql import MySQL
 import psycopg2
 from werkzeug import generate_password_hash, check_password_hash
+import add_to_latlng, get_dist
 app = Flask(__name__)
 
 mysql = MySQL()
@@ -54,9 +55,13 @@ def map():
 	conn = mysql.connect()
 	cursor = conn.cursor()
 	print(_location)
-	query3 = "select DISTINCT First_Name,user_username FROM tbl_test GROUP BY Location='"+_location+"'"
+	query3 = "select DISTINCT First_Name,user_username,Location FROM tbl_test GROUP BY Location='"+_location+"'"
 	cursor.execute(query3)
 	data1 = cursor.fetchall()
+	lat_lng_loc = add_to_latlng.addToLatLng(_location)
+	for x in data1:
+		lat_lng_target = add_to_latlng.addToLatLng(x[2])
+		x.append(str(get_dist.getDriveTime(lat_lng_loc,lat_lng_target)))
 	return render_template('design.html', result = data1)
 
 	#return(json.dumps({'html': str(data1)}))
